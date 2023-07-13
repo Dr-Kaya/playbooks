@@ -14,23 +14,23 @@
                     "targetPort": "2_in"
                 },
                 {
-                    "id": "port_2_to_port_4",
+                    "id": "port_2_to_port_13",
                     "sourceNode": "2",
                     "sourcePort": "2_out",
-                    "targetNode": "4",
-                    "targetPort": "4_in"
+                    "targetNode": "13",
+                    "targetPort": "13_in"
                 },
                 {
-                    "id": "port_2_to_port_11",
-                    "sourceNode": "2",
-                    "sourcePort": "2_out",
+                    "id": "port_0_to_port_11",
+                    "sourceNode": "0",
+                    "sourcePort": "0_out",
                     "targetNode": "11",
                     "targetPort": "11_in"
                 },
                 {
-                    "id": "port_11_to_port_12",
-                    "sourceNode": "11",
-                    "sourcePort": "11_out",
+                    "id": "port_0_to_port_12",
+                    "sourceNode": "0",
+                    "sourcePort": "0_out",
                     "targetNode": "12",
                     "targetPort": "12_in"
                 },
@@ -40,9 +40,16 @@
                     "sourcePort": "12_out",
                     "targetNode": "13",
                     "targetPort": "13_in"
+                },
+                {
+                    "id": "port_11_to_port_13",
+                    "sourceNode": "11",
+                    "sourcePort": "11_out",
+                    "targetNode": "13",
+                    "targetPort": "13_in"
                 }
             ],
-            "hash": "f5dff10dab308d463401b466a8171e9739dff0de",
+            "hash": "05cdc740368fe71fb98d3d247e23a45420532c97",
             "nodes": {
                 "0": {
                     "data": {
@@ -81,6 +88,8 @@
                         "action": "domain reputation",
                         "actionType": "investigate",
                         "advanced": {
+                            "customName": "Source Reputation",
+                            "customNameId": 0,
                             "join": []
                         },
                         "connector": "VirusTotal",
@@ -90,7 +99,7 @@
                         "connectorId": "11f676a4-f3d4-4db0-8587-f4e942c07c7c",
                         "connectorVersion": "v1",
                         "functionId": 1,
-                        "functionName": "domain_reputation_1",
+                        "functionName": "source_reputation",
                         "id": "11",
                         "parameters": {
                             "domain": "artifact:*.cef.sourceDnsDomain"
@@ -107,8 +116,8 @@
                     "id": "11",
                     "type": "action",
                     "warnings": {},
-                    "x": 980,
-                    "y": 704.5
+                    "x": 640,
+                    "y": 600
                 },
                 "12": {
                     "data": {
@@ -143,8 +152,8 @@
                     "id": "12",
                     "type": "action",
                     "warnings": {},
-                    "x": 980,
-                    "y": 784.5
+                    "x": 1360,
+                    "y": 600
                 },
                 "13": {
                     "data": {
@@ -315,13 +324,15 @@
                     "type": "utility",
                     "warnings": {},
                     "x": 980,
-                    "y": 924.5
+                    "y": 760
                 },
                 "2": {
                     "data": {
                         "action": "geolocate ip",
                         "actionType": "investigate",
                         "advanced": {
+                            "customName": "Locate Source",
+                            "customNameId": 0,
                             "join": []
                         },
                         "connector": "MaxMind",
@@ -331,7 +342,7 @@
                         "connectorId": "c566e153-3118-4033-abda-14dd9748c91a",
                         "connectorVersion": "v1",
                         "functionId": 1,
-                        "functionName": "geolocate_ip_1",
+                        "functionName": "locate_source",
                         "id": "2",
                         "parameters": {
                             "ip": "artifact:*.cef.sourceAddress"
@@ -349,7 +360,7 @@
                     "type": "action",
                     "warnings": {},
                     "x": 980,
-                    "y": 504.5
+                    "y": 600
                 },
                 "4": {
                     "data": {
@@ -519,8 +530,8 @@
                     "id": "4",
                     "type": "utility",
                     "warnings": {},
-                    "x": 1440,
-                    "y": 660
+                    "x": 1760,
+                    "y": 620
                 }
             },
             "notes": ""
@@ -532,7 +543,7 @@
         "schema": "5.0.10",
         "version": "6.0.1.123902"
     },
-    "create_time": "2023-07-13T19:27:49.199110+00:00",
+    "create_time": "2023-07-13T19:31:24.245716+00:00",
     "draft_mode": false,
     "labels": [
         "*"

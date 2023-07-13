@@ -12,14 +12,18 @@ from datetime import datetime, timedelta
 def on_start(container):
     phantom.debug('on_start() called')
 
-    # call 'geolocate_ip_1' block
-    geolocate_ip_1(container=container)
+    # call 'locate_source' block
+    locate_source(container=container)
+    # call 'source_reputation' block
+    source_reputation(container=container)
+    # call 'virus_search' block
+    virus_search(container=container)
 
     return
 
 @phantom.playbook_block()
-def geolocate_ip_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
-    phantom.debug("geolocate_ip_1() called")
+def locate_source(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug("locate_source() called")
 
     # phantom.debug('Action: {0} {1}'.format(action['name'], ('SUCCEEDED' if success else 'FAILED')))
 
@@ -27,7 +31,7 @@ def geolocate_ip_1(action=None, success=None, container=None, results=None, hand
 
     parameters = []
 
-    # build parameters list for 'geolocate_ip_1' call
+    # build parameters list for 'locate_source' call
     for container_artifact_item in container_artifact_data:
         if container_artifact_item[0] is not None:
             parameters.append({
@@ -45,19 +49,7 @@ def geolocate_ip_1(action=None, success=None, container=None, results=None, hand
     ## Custom Code End
     ################################################################################
 
-    phantom.act("geolocate ip", parameters=parameters, name="geolocate_ip_1", assets=["maxmind"], callback=geolocate_ip_1_callback)
-
-    return
-
-
-@phantom.playbook_block()
-def geolocate_ip_1_callback(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
-    phantom.debug("geolocate_ip_1_callback() called")
-
-    
-    debug_2(action=action, success=success, container=container, results=results, handle=handle, filtered_artifacts=filtered_artifacts, filtered_results=filtered_results)
-    domain_reputation_1(action=action, success=success, container=container, results=results, handle=handle, filtered_artifacts=filtered_artifacts, filtered_results=filtered_results)
-
+    phantom.act("geolocate ip", parameters=parameters, name="locate_source", assets=["maxmind"], callback=join_debug_4)
 
     return
 
@@ -103,8 +95,8 @@ def debug_2(action=None, success=None, container=None, results=None, handle=None
 
 
 @phantom.playbook_block()
-def domain_reputation_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
-    phantom.debug("domain_reputation_1() called")
+def source_reputation(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug("source_reputation() called")
 
     # phantom.debug('Action: {0} {1}'.format(action['name'], ('SUCCEEDED' if success else 'FAILED')))
 
@@ -112,7 +104,7 @@ def domain_reputation_1(action=None, success=None, container=None, results=None,
 
     parameters = []
 
-    # build parameters list for 'domain_reputation_1' call
+    # build parameters list for 'source_reputation' call
     for container_artifact_item in container_artifact_data:
         if container_artifact_item[0] is not None:
             parameters.append({
@@ -130,7 +122,7 @@ def domain_reputation_1(action=None, success=None, container=None, results=None,
     ## Custom Code End
     ################################################################################
 
-    phantom.act("domain reputation", parameters=parameters, name="domain_reputation_1", assets=["virustotal"], callback=virus_search)
+    phantom.act("domain reputation", parameters=parameters, name="source_reputation", assets=["virustotal"], callback=join_debug_4)
 
     return
 
@@ -163,7 +155,18 @@ def virus_search(action=None, success=None, container=None, results=None, handle
     ## Custom Code End
     ################################################################################
 
-    phantom.act("file reputation", parameters=parameters, name="virus_search", assets=["virustotal"], callback=debug_4)
+    phantom.act("file reputation", parameters=parameters, name="virus_search", assets=["virustotal"], callback=join_debug_4)
+
+    return
+
+
+@phantom.playbook_block()
+def join_debug_4(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug("join_debug_4() called")
+
+    if phantom.completed(action_names=["locate_source", "source_reputation", "virus_search"]):
+        # call connected block "debug_4"
+        debug_4(container=container, handle=handle)
 
     return
 
