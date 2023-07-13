@@ -14,13 +14,6 @@
                     "targetPort": "2_in"
                 },
                 {
-                    "id": "port_2_to_port_13",
-                    "sourceNode": "2",
-                    "sourcePort": "2_out",
-                    "targetNode": "13",
-                    "targetPort": "13_in"
-                },
-                {
                     "id": "port_0_to_port_11",
                     "sourceNode": "0",
                     "sourcePort": "0_out",
@@ -35,21 +28,40 @@
                     "targetPort": "12_in"
                 },
                 {
-                    "id": "port_12_to_port_13",
-                    "sourceNode": "12",
-                    "sourcePort": "12_out",
-                    "targetNode": "13",
-                    "targetPort": "13_in"
+                    "id": "port_2_to_port_14",
+                    "sourceNode": "2",
+                    "sourcePort": "2_out",
+                    "targetNode": "14",
+                    "targetPort": "14_in"
                 },
                 {
-                    "id": "port_11_to_port_13",
+                    "id": "port_12_to_port_14",
+                    "sourceNode": "12",
+                    "sourcePort": "12_out",
+                    "targetNode": "14",
+                    "targetPort": "14_in"
+                },
+                {
+                    "id": "port_11_to_port_14",
                     "sourceNode": "11",
                     "sourcePort": "11_out",
-                    "targetNode": "13",
-                    "targetPort": "13_in"
+                    "targetNode": "14",
+                    "targetPort": "14_in"
+                },
+                {
+                    "conditions": [
+                        {
+                            "index": 0
+                        }
+                    ],
+                    "id": "port_14_to_port_15",
+                    "sourceNode": "14",
+                    "sourcePort": "14_out",
+                    "targetNode": "15",
+                    "targetPort": "15_in"
                 }
             ],
-            "hash": "05cdc740368fe71fb98d3d247e23a45420532c97",
+            "hash": "c911a76a6a5b86c8f966ff1472e6e80b9cdbfb68",
             "nodes": {
                 "0": {
                     "data": {
@@ -322,9 +334,103 @@
                     "errors": {},
                     "id": "13",
                     "type": "utility",
+                    "warnings": {
+                        "context": [
+                            "Connect block to playbook flow."
+                        ]
+                    },
+                    "x": 1460,
+                    "y": 900
+                },
+                "14": {
+                    "data": {
+                        "advanced": {
+                            "customName": "Check Positives",
+                            "customNameId": 0,
+                            "join": []
+                        },
+                        "conditions": [
+                            {
+                                "comparisons": [
+                                    {
+                                        "conditionIndex": 0,
+                                        "op": ">",
+                                        "param": "virus_search:action_research.summary.positives",
+                                        "value": "10"
+                                    }
+                                ],
+                                "conditionIndex": 0,
+                                "customName": "Hi Positives",
+                                "display": "If",
+                                "logic": "and",
+                                "type": "if"
+                            },
+                            {
+                                "comparisons": [
+                                    {
+                                        "op": "==",
+                                        "param": "",
+                                        "value": ""
+                                    }
+                                ],
+                                "conditionIndex": 1,
+                                "customName": "Lo Positives",
+                                "display": "Else",
+                                "logic": "and",
+                                "type": "else"
+                            }
+                        ],
+                        "functionId": 3,
+                        "functionName": "check_positives",
+                        "id": "14",
+                        "type": "decision"
+                    },
+                    "errors": {},
+                    "id": "14",
+                    "type": "decision",
                     "warnings": {},
-                    "x": 980,
+                    "x": 1060,
                     "y": 760
+                },
+                "15": {
+                    "data": {
+                        "advanced": {
+                            "customName": "Notify SOC Management",
+                            "customNameId": 0,
+                            "join": []
+                        },
+                        "approver": {
+                            "type": "user",
+                            "value": "container_owner"
+                        },
+                        "functionId": 2,
+                        "functionName": "notify_soc_management",
+                        "id": "15",
+                        "message": "A potentially malicious file download has been detected on a local server with Ip address {0}.",
+                        "parameters": [
+                            "artifact:*.cef.destinationAddress"
+                        ],
+                        "responseTime": 30,
+                        "responses": [
+                            {
+                                "responseOptions": [
+                                    "Yes",
+                                    "No"
+                                ],
+                                "responsePrompt": "Notify SOC management?",
+                                "responseType": "yes/no"
+                            }
+                        ],
+                        "type": "prompt"
+                    },
+                    "errors": {
+                        "message": "Add message content."
+                    },
+                    "id": "15",
+                    "type": "prompt",
+                    "warnings": {},
+                    "x": 1060,
+                    "y": 864.5
                 },
                 "2": {
                     "data": {
@@ -543,7 +649,7 @@
         "schema": "5.0.10",
         "version": "6.0.1.123902"
     },
-    "create_time": "2023-07-13T19:31:24.245716+00:00",
+    "create_time": "2023-07-13T19:37:33.331846+00:00",
     "draft_mode": false,
     "labels": [
         "*"
