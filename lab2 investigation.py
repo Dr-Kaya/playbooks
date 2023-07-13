@@ -228,6 +228,9 @@ def check_positives(action=None, success=None, container=None, results=None, han
         notify_soc_management(action=action, success=success, container=container, results=results, handle=handle)
         return
 
+    # check for 'else' condition 2
+    format_for_virus_positives(action=action, success=success, container=container, results=results, handle=handle)
+
     return
 
 
@@ -257,10 +260,164 @@ def notify_soc_management(action=None, success=None, container=None, results=Non
                     "No"
                 ],
             },
+        },
+        {
+            "prompt": "Reason for decision",
+            "options": {
+                "type": "message",
+            },
         }
     ]
 
-    phantom.prompt2(container=container, user=user, role=role, message=message, respond_in_mins=30, name="notify_soc_management", parameters=parameters, response_types=response_types, drop_none=True)
+    phantom.prompt2(container=container, user=user, role=role, message=message, respond_in_mins=30, name="notify_soc_management", parameters=parameters, response_types=response_types, callback=evaluate_prompt, drop_none=True)
+
+    return
+
+
+@phantom.playbook_block()
+def evaluate_prompt(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug("evaluate_prompt() called")
+
+    # check for 'if' condition 1
+    found_match_1 = phantom.decision(
+        container=container,
+        conditions=[
+            ["notify_soc_management:action_result.status", "!=", "success"]
+        ],
+        delimiter=None)
+
+    # call connected blocks if condition 1 matched
+    if found_match_1:
+        pin_6(action=action, success=success, container=container, results=results, handle=handle)
+        return
+
+    # check for 'elif' condition 2
+    found_match_2 = phantom.decision(
+        container=container,
+        conditions=[
+            ["notify_soc_management:action_result.summary.responses.0", "==", "Yes"]
+        ],
+        delimiter=None)
+
+    # call connected blocks if condition 2 matched
+    if found_match_2:
+        call_api_7(action=action, success=success, container=container, results=results, handle=handle)
+        return
+
+    # check for 'else' condition 3
+    add_comment_8(action=action, success=success, container=container, results=results, handle=handle)
+
+    return
+
+
+@phantom.playbook_block()
+def format_for_virus_positives(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug("format_for_virus_positives() called")
+
+    template = """Virus positives X are below threshold 10, closing event.\n"""
+
+    # parameter list for template variable replacement
+    parameters = [
+        ""
+    ]
+
+    ################################################################################
+    ## Custom Code Start
+    ################################################################################
+
+    # Write your custom code here...
+
+    ################################################################################
+    ## Custom Code End
+    ################################################################################
+
+    phantom.format(container=container, template=template, parameters=parameters, name="format_for_virus_positives")
+
+    message(container=container)
+
+    return
+
+
+@phantom.playbook_block()
+def message(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug("message() called")
+
+    format_for_virus_positives = phantom.get_format_data(name="format_for_virus_positives")
+
+    ################################################################################
+    ## Custom Code Start
+    ################################################################################
+
+    # Write your custom code here...
+
+    ################################################################################
+    ## Custom Code End
+    ################################################################################
+
+    phantom.comment(container=container, comment=format_for_virus_positives)
+
+    return
+
+
+@phantom.playbook_block()
+def pin_6(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug("pin_6() called")
+
+    ################################################################################
+    # User failed to promote event within the time limit.
+    ################################################################################
+
+    ################################################################################
+    ## Custom Code Start
+    ################################################################################
+
+    # Write your custom code here...
+
+    ################################################################################
+    ## Custom Code End
+    ################################################################################
+
+    phantom.pin(container=container, message="Awaiting Action", pin_style="red", pin_type="card")
+
+    return
+
+
+@phantom.playbook_block()
+def call_api_7(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug("call_api_7() called")
+
+    ################################################################################
+    ## Custom Code Start
+    ################################################################################
+
+    # Write your custom code here...
+
+    ################################################################################
+    ## Custom Code End
+    ################################################################################
+
+    return
+
+
+@phantom.playbook_block()
+def add_comment_8(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug("add_comment_8() called")
+
+    notify_soc_management_result_data = phantom.collect2(container=container, datapath=["notify_soc_management:action_result.summary.responses.1"], action_results=results)
+
+    notify_soc_management_summary_responses_1 = [item[0] for item in notify_soc_management_result_data]
+
+    ################################################################################
+    ## Custom Code Start
+    ################################################################################
+
+    # Write your custom code here...
+
+    ################################################################################
+    ## Custom Code End
+    ################################################################################
+
+    phantom.comment(container=container, comment=notify_soc_management_summary_responses_1)
 
     return
 
