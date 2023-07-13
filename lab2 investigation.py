@@ -301,11 +301,10 @@ def evaluate_prompt(action=None, success=None, container=None, results=None, han
 
     # call connected blocks if condition 2 matched
     if found_match_2:
-        call_api_7(action=action, success=success, container=container, results=results, handle=handle)
         return
 
     # check for 'else' condition 3
-    add_comment_8(action=action, success=success, container=container, results=results, handle=handle)
+    add_comment_set_status_8(action=action, success=success, container=container, results=results, handle=handle)
 
     return
 
@@ -383,25 +382,8 @@ def pin_6(action=None, success=None, container=None, results=None, handle=None, 
 
 
 @phantom.playbook_block()
-def call_api_7(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
-    phantom.debug("call_api_7() called")
-
-    ################################################################################
-    ## Custom Code Start
-    ################################################################################
-
-    # Write your custom code here...
-
-    ################################################################################
-    ## Custom Code End
-    ################################################################################
-
-    return
-
-
-@phantom.playbook_block()
-def add_comment_8(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
-    phantom.debug("add_comment_8() called")
+def add_comment_set_status_8(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug("add_comment_set_status_8() called")
 
     notify_soc_management_result_data = phantom.collect2(container=container, datapath=["notify_soc_management:action_result.summary.responses.1"], action_results=results)
 
@@ -418,6 +400,9 @@ def add_comment_8(action=None, success=None, container=None, results=None, handl
     ################################################################################
 
     phantom.comment(container=container, comment=notify_soc_management_summary_responses_1)
+    phantom.set_status(container=container, status="closed")
+
+    container = phantom.get_container(container.get('id', None))
 
     return
 
